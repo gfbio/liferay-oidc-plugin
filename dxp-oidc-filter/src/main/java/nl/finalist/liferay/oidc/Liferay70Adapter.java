@@ -95,6 +95,12 @@ public class Liferay70Adapter implements LiferayAdapter {
         try {
             User user = userLocalService.fetchUserByEmailAddress(companyId, emailAddress);
 
+			// LOG.debug("firstName: " + firstName);
+			// LOG.debug("lastName: " + lastName);
+			// LOG.debug("email: " + emailAddress);
+
+			LOG.debug("HIER GEHT ES LOS!!!");
+            
             if (user == null) {
                 LOG.debug("No Liferay user found with email address " + emailAddress + ", will create one.");
                 user = addUser(companyId, emailAddress, firstName, lastName);
