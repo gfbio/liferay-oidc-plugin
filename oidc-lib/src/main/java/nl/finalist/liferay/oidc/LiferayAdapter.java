@@ -39,6 +39,6 @@ public interface LiferayAdapter {
 	 * @return the userId of the created or updated User, as a String
 	 */
 	String createOrUpdateUser(long companyId, String emailAddress,
-			String firstName, String lastName);
+			String firstName, String lastName, String goesternID);
 
 }

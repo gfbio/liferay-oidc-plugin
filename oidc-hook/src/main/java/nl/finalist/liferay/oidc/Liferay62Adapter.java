@@ -73,15 +73,20 @@ public class Liferay62Adapter implements LiferayAdapter {
 
 	@Override
 	public String createOrUpdateUser(long companyId, String emailAddress,
-			String firstName, String lastName) {
+			String firstName, String lastName, String goesternID) {
 
 		try {
 			User user = UserLocalServiceUtil.fetchUserByEmailAddress(companyId,
 					emailAddress);
+			
+			/**TODO: map goesternID to userID***/
+			//long userID = 12345;
+			//User user2 = UserLocalServiceUtil.fetchUser(userID);
 
 			LOG.debug("firstName: " + firstName);
 			LOG.debug("lastName: " + lastName);
 			LOG.debug("email: " + emailAddress);
+			LOG.debug("goesternID: " + goesternID);
 
 			LOG.debug("HIER GEHT ES LOS!!!");
 
