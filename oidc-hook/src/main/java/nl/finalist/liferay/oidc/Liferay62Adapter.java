@@ -5,6 +5,9 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.gfbio.model.UserGoesternID;
+import org.gfbio.service.UserGoesternIDLocalServiceUtil;
+
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -78,6 +81,7 @@ public class Liferay62Adapter implements LiferayAdapter {
 		try {
 			User user = UserLocalServiceUtil.fetchUserByEmailAddress(companyId,
 					emailAddress);
+					
 			
 			/**TODO: map goesternID to userID***/
 			//long userID = 12345;
@@ -89,6 +93,8 @@ public class Liferay62Adapter implements LiferayAdapter {
 			LOG.debug("goesternID: " + goesternID);
 
 			LOG.debug("HIER GEHT ES LOS!!!");
+			
+			
 
 			if (user == null) {
 				LOG.debug("No Liferay user found with email address "
@@ -98,7 +104,25 @@ public class Liferay62Adapter implements LiferayAdapter {
 				LOG.debug("User found, updating name details with info from userinfo");
 				updateUser(user, firstName, lastName);
 			}
+			
+			try {
+				//if entry in DB is available - update the entry, otherwise create a new entry
+				//userID and goesternID must be given!!!
+				UserGoesternID ug = UserGoesternIDLocalServiceUtil.updateUserGoesternID(user.getUserId(), Long.parseLong(goesternID));
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+	
 			return String.valueOf(user.getUserId());
+			
+			
+			
+			
 
 		} catch (SystemException | PortalException e) {
 			throw new RuntimeException(e);
