@@ -5,6 +5,8 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.gfbio.service.impl.UserGoesternIDServiceImpl;
+
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -73,20 +75,29 @@ public class Liferay62Adapter implements LiferayAdapter {
 
 	@Override
 	public String createOrUpdateUser(long companyId, String emailAddress,
-			String firstName, String lastName, String goesternID) {
+			String firstName, String lastName, String goesternId) {
 
 		try {
-			User user = UserLocalServiceUtil.fetchUserByEmailAddress(companyId,
-					emailAddress);
-			
-			/**TODO: map goesternID to userID***/
-			//long userID = 12345;
-			//User user2 = UserLocalServiceUtil.fetchUser(userID);
+
+			// Get UserId based on GoesternId
+			UserGoesternIDServiceImpl x = new UserGoesternIDServiceImpl();
+
+			// long userId = x.getUserByGoeSternID(goesternId);
+
+			User user = null;
+
+			// User user =
+			// UserLocalServiceUtil.fetchUserByEmailAddress(companyId,
+			// emailAddress);
+
+			/** TODO: map goesternID to userID ***/
+			// long userID = 12345;
+			// User user2 = UserLocalServiceUtil.fetchUser(userID);
 
 			LOG.debug("firstName: " + firstName);
 			LOG.debug("lastName: " + lastName);
 			LOG.debug("email: " + emailAddress);
-			LOG.debug("goesternID: " + goesternID);
+			LOG.debug("goesternID: " + goesternId);
 
 			LOG.debug("HIER GEHT ES LOS!!!");
 
@@ -133,7 +144,7 @@ public class Liferay62Adapter implements LiferayAdapter {
 		long[] userGroupIds = null;
 		boolean sendEmail = false;
 		ServiceContext serviceContext = new ServiceContext();
-		
+
 		User user = UserLocalServiceUtil.addUser(creatorUserId, companyId,
 				autoPassword, password1, password2, autoScreenName, screenName,
 				emailAddress, facebookId, openId, locale, firstName,

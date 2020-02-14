@@ -8,8 +8,8 @@ public class UserInfoProvider {
 		return userInfo.get("email");
 	}
 
-	public String getGoesternID(Map<String, String> userInfo) {
-		return userInfo.get("id");
+	public String getGoesternId(Map<String, String> userInfo) {
+		return userInfo.get("goe_id");
 	}
 
 	public String getFirstName(Map<String, String> userInfo) {
