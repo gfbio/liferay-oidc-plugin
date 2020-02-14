@@ -19,7 +19,7 @@ import org.apache.commons.lang3.StringUtils;
  * if none found.
  */
 public class LibAutoLogin {
-	
+
 	private final LiferayAdapter liferay;
 
 	public LibAutoLogin(LiferayAdapter liferay) {
@@ -39,7 +39,7 @@ public class LibAutoLogin {
 
 		if (oidcConfiguration.isEnabled()) {
 			HttpSession session = request.getSession();
-			
+
 			Map<String, String> userInfo = (Map<String, String>) session
 					.getAttribute(LibFilter.OPENID_CONNECT_SESSION_ATTR);
 
@@ -59,8 +59,8 @@ public class LibAutoLogin {
 				String emailAddress = provider.getEmail(userInfo);
 				String givenName = provider.getFirstName(userInfo);
 				String familyName = provider.getLastName(userInfo);
-				
-				String goesternID = provider.getGoesternID(userInfo);
+
+				String goesternID = provider.getGoesternId(userInfo);
 
 				String userId = liferay.createOrUpdateUser(companyId,
 						emailAddress, givenName, familyName, goesternID);
