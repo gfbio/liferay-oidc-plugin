@@ -68,5 +68,11 @@
             <artifactId>oidc-lib</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+    	<dependency>
+            <groupId>org.gfbio</groupId>
+            <artifactId>GFBioProject-portlet-service</artifactId>
+            <version>10.0</version>
+        </dependency>
     </dependencies>
 </project>
