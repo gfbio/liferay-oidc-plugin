@@ -5,7 +5,7 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.gfbio.service.impl.UserGoesternIDServiceImpl;
+import org.gfbio.service.UserGoesternIDLocalServiceUtil;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -77,43 +77,40 @@ public class Liferay62Adapter implements LiferayAdapter {
 	public String createOrUpdateUser(long companyId, String emailAddress,
 			String firstName, String lastName, String goesternId) {
 
+		User user = null;
 		try {
+			long userId = UserGoesternIDLocalServiceUtil
+					.getUserIdByGoesternID(goesternId);
 
-			// Get UserId based on GoesternId
-			UserGoesternIDServiceImpl x = new UserGoesternIDServiceImpl();
+			// Mapping Entry Check UserId <-> GoesternId
+			if (userId > 0) {
+				user = UserLocalServiceUtil.fetchUser(userId);
+			} else {
+				user = UserLocalServiceUtil.fetchUserByEmailAddress(companyId,
+						emailAddress);
+			}
 
-			// long userId = x.getUserByGoeSternID(goesternId);
-
-			User user = null;
-
-			// User user =
-			// UserLocalServiceUtil.fetchUserByEmailAddress(companyId,
-			// emailAddress);
-
-			/** TODO: map goesternID to userID ***/
-			// long userID = 12345;
-			// User user2 = UserLocalServiceUtil.fetchUser(userID);
-
-			LOG.debug("firstName: " + firstName);
-			LOG.debug("lastName: " + lastName);
-			LOG.debug("email: " + emailAddress);
-			LOG.debug("goesternID: " + goesternId);
-
-			LOG.debug("HIER GEHT ES LOS!!!");
-
+			// Existence Check for User Object
 			if (user == null) {
-				LOG.debug("No Liferay user found with email address "
-						+ emailAddress + ", will create one.");
+				LOG.debug("Oh no, it is not possible to find user by email address ("
+						+ emailAddress
+						+ ") or goestern id ("
+						+ goesternId
+						+ ").");
+				LOG.debug("So,... lets create a new user!");
 				user = addUser(companyId, emailAddress, firstName, lastName);
 			} else {
-				LOG.debug("User found, updating name details with info from userinfo");
-				updateUser(user, firstName, lastName);
+				LOG.debug("Congrats! There is already a user. Just update the information.");
+				updateUser(user, firstName, lastName, emailAddress);
 			}
-			return String.valueOf(user.getUserId());
 
-		} catch (SystemException | PortalException e) {
-			throw new RuntimeException(e);
+			UserGoesternIDLocalServiceUtil.updateUserGoesternID(
+					user.getUserId(), goesternId);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+
+		return String.valueOf(user.getUserId());
 	}
 
 	// Copied from OpenSSOAutoLogin.java
@@ -161,9 +158,11 @@ public class Liferay62Adapter implements LiferayAdapter {
 		return user;
 	}
 
-	private void updateUser(User user, String firstName, String lastName) {
+	private void updateUser(User user, String firstName, String lastName,
+			String emailAddress) {
 		user.setFirstName(firstName);
 		user.setLastName(lastName);
+		user.setEmailAddress(emailAddress);
 		try {
 			UserLocalServiceUtil.updateUser(user);
 		} catch (SystemException e) {
